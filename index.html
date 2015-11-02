@@ -1,0 +1,145 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>BASIC SEO GENERATOR</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ferramenta desenvolvida para gerar o código básico de SEO para ser usado os sites da empresa 'PLUG MÍDIA DIGITAL'.">
+    <meta name="author" content="Luigi Matheus Afornalli Breda">
+    <link rel="stylesheet" media="screen" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css">
+</head>
+<body>
+	<div class="panel panel-default">
+		<div class="container">
+			<div id="content">
+				<div id="my-tab-content" class="tab-content">
+					<div class="tab-pane active" id="seo-generator">
+						<h1>BASIC SEO GENERATOR</h1>
+						<hr>
+						<p>Ferramenta desenvolvida para gerar o código básico de SEO para ser usado os sites da empresa PLUG MÍDIA DIGITAL.</p>
+						<br />
+						<form id="basic-seo-generator" class="form-horizontal">
+							<fieldset>
+
+							<!-- Text input-->
+							<div class="form-group">
+							  <label class="col-md-4 control-label" for="nome_empresa">NOME DA EMPRESA</label>  
+							  <div class="col-md-5">
+							  <input id="nome_empresa" name="nome_empresa" placeholder="ex: PLUG MÍDIA DIGITAL" class="form-control input-md" required="" type="text">
+							  </div>
+							</div>
+
+							<!-- Text input-->
+							<div class="form-group">
+							  <label class="col-md-4 control-label" for="link_site">LINK DO SITE</label>  
+							  <div class="col-md-5">
+							  <input id="link_site" name="link_site" placeholder="ex: www.plugmidiadigital.com.br" class="form-control input-md" required="" type="text">
+							  </div>
+							</div>
+
+							<!-- Text input-->
+							<div class="form-group">
+							  <label class="col-md-4 control-label" for="palavras-chaves">PALAVRAS-CHAVES</label>  
+							  <div class="col-md-5">
+							  <input id="palavras-chaves" name="palavras-chaves" placeholder="ex: PALAVRA-CHAVE 1,PALAVRA-CHAVE 2,PALAVRA-CHAVE 3" class="form-control input-md" required="" type="text">
+							  </div>
+							</div>
+
+							<!-- Button (Double) -->
+							<div class="form-group">
+							  <label class="col-md-4 control-label" for="reset"></label>
+							  <div class="col-md-8">
+								<button type="reset" id="reset" name="reset" class="btn btn-danger">Limpar</button>
+								<button type="submit" id="enviar" name="enviar" class="btn btn-success">Gerar</button>
+							  </div>
+							</div>
+
+							</fieldset>
+						</form>
+
+						<!-- MODAL PARA MOSTRAR O QUERY GERADA -->
+						<div class="modal fade" id="resultadoQuery" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+									<!-- CABEÇALHO MODAL -->
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+										<h4 class="modal-title" id="myModalLabel">Resultado:</h4>
+									</div>
+									<!-- CORPO DO MODAL -->
+									<div class="modal-body"><pre><code id="mostra-resultado"></code></pre></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script>
+// --------------------------------------------------
+// RECEBE OS DADOS E GERA A QUERY
+// --------------------------------------------------
+$(function() {
+    $('#basic-seo-generator').on('submit', function(e) { 
+		e.preventDefault();
+		// PEGA OS DADOS DO FORM
+		var nome_empresa = $('#nome_empresa').val().toUpperCase();
+		var link_site = $('#link_site').val();
+		var palavras_chaves = $('#palavras-chaves').val().toUpperCase();
+
+		// TITULO
+		var seo_1 = '<title>'+nome_empresa+' - '+palavras_chaves+'</title>';
+		// DESCRIÇÃO
+		var seo_2 = '<meta name="description" content="'+nome_empresa+' - '+palavras_chaves+'"/\>';
+		// URL
+		var seo_3 = '<meta property="og:url" content="'+link_site+'"/\>';
+		// TITULO ORGANICO
+		var seo_4 = '<meta property="og:title" content="'+nome_empresa+' - '+palavras_chaves+'"/\>';
+		// DESCRIÇÃO ORGANICA
+		var seo_4 = '<meta property="og:description" content="'+nome_empresa+' - '+palavras_chaves+'"/\>';
+
+		var resultado = seo_1+seo_2+seo_3+seo_4;
+		
+		// List of HTML entities for escaping.
+		var htmlEscapes = {
+		  '&': '&amp;',
+		  '<': '&lt;',
+		  '>': '&gt;',
+		  '"': '&quot;',
+		  "'": '&#x27;',
+		  '/': '&#x2F;'
+		};
+
+		// Regex containing the keys listed immediately above.
+		var htmlEscaper = /[&<>"'\/]/g;
+
+		// Escape a string for HTML interpolation.
+		function prepara_string(string) {
+		  return ('' + string).replace(htmlEscaper, function(match) {
+			 return htmlEscapes[match];
+		  });
+		};
+
+		mostra_query(prepara_string(resultado));
+    });
+});
+
+// --------------------------------------------------
+// EXIBE NA TELA A QUERY MONTADA
+// --------------------------------------------------
+function mostra_query(resultado) {
+	if(!resultado) {
+		document.getElementById("mostra-resultado").innerHTML = 'Erro ao gerar a query...';
+	} else {
+		document.getElementById("mostra-resultado").innerHTML = resultado;
+	}
+	$('#resultadoQuery').modal('show'); 
+}
+</script>
+</html>
+
